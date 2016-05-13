@@ -1,0 +1,1151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns:rng="http://relaxng.org/ns/structure/1.0" xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns="http://www.tei-c.org/ns/1.0" 
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>Schema for the music encoding of Freischütz Digital</title>
+        <respStmt>
+          <resp>Authored by</resp>
+          <name xml:id="JK">Johannes Kepper</name>
+          <name xml:id="BWB">Benjamin W. Bohl</name>
+       </respStmt>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>
+          <ref target="http://freischuetz-digital.de/">Freischuetz Digital</ref>
+          <address>
+            <addrLine>Musikwissenschaftliches Seminar Detmold/Paderborn</addrLine>
+            <addrLine>Prof. Dr. Joachim Veit</addrLine>
+            <addrLine>Hornsche Straße 39</addrLine>
+            <addrLine>32756 Detmold</addrLine>
+            <addrLine>Deutschland</addrLine>
+          </address>
+          <address>
+            <addrLine>International Audio Laboratories Erlangen</addrLine>
+            <addrLine>Prof. Dr. Meinard Müller</addrLine>
+            <addrLine>Am Wolfsmantel 33</addrLine>
+            <addrLine>91058</addrLine>
+            <addrLine>Erlangen</addrLine>
+            <addrLine>Deutschland</addrLine>
+          </address>
+          <address>
+            <addrLine>Goethe-Universität, Institut für Musikwissenschaft</addrLine>
+            <addrLine>Prof. Dr. Thomas Betzwieser</addrLine>
+            <addrLine>Senckenberganlage 31</addrLine>
+            <addrLine>60325</addrLine>
+            <addrLine>Frankfurt am Main</addrLine>
+            <addrLine>Deutschland</addrLine>
+          </address>
+          <address>
+            <addrLine>Universität Paderborn, Institut für Informatik, Fachgebiet Mensch-Computer-Interaktion</addrLine>
+            <addrLine>Prof. Dr. Gerd Szwillus</addrLine>
+            <addrLine>Fürstenallee 11</addrLine>
+            <addrLine>33102</addrLine>
+            <addrLine>Paderborn</addrLine>
+            <addrLine>Deutschland</addrLine>
+          </address>
+        </publisher>
+        <authority>
+          <orgName role="fnd">Bundesministerium für Bildung und Forschung</orgName>
+        </authority>
+        <distributor>TextGrid</distributor>
+        <idno type="TextGridUri" n="FreiDi-Release_1.0.0">textgrid:25418.0</idno>
+        <date when="2016-05-20">2016-05-10</date>
+        <availability status="restricted">
+          <p>Copyright © 2015, Freischütz Digital; Detmold, Erlangen, Frankfurt,
+            Paderborn <lb/>Alle Rechte an den Abbildungen bleiben bei den bewahrenden
+            Bibliotheken und Institutionen.</p>
+            <licence target="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA
+              4.0</licence>
+        </availability>
+      </publicationStmt>
+      <sourceDesc>
+        <p/>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <front>
+      <divGen type="toc"/>
+    </front>
+    <body>
+      <schemaSpec ident="mei" start="mei" prefix="mei_" ns="http://www.music-encoding.org/ns/mei">
+        
+        <moduleRef key="MEI"/>
+        <moduleRef key="MEI.header"/>
+        <moduleRef key="MEI.namesdates"/>
+        <moduleRef key="MEI.ptrref"/>
+        <moduleRef key="MEI.facsimile"/>
+        <moduleRef key="MEI.figtable" except="fig figDesc table td th tr"/>
+        <moduleRef key="MEI.shared" except="keySig barLine clefGrp custos pad phrase grpSym"/>
+        <moduleRef key="MEI.cmn" except="meterSig meterSigGrp bend harpPedal pedal fermata"/>
+        <moduleRef key="MEI.cmnOrnaments"/>
+        <moduleRef key="MEI.critapp"/>
+        <moduleRef key="MEI.lyrics"/>
+        <moduleRef key="MEI.analysis"/>
+        <moduleRef key="MEI.frbr"/>
+        <moduleRef key="MEI.edittrans" except="damage gap handShift unclear"/>
+        <moduleRef key="MEI.performance"/>
+        <moduleRef key="MEI.text"/>
+        
+        <elementSpec ident="note" module="MEI.shared" mode="change">
+          <constraintSpec ident="Check_tupletSpan" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:note">
+                <sch:assert test="not(exists(./@tupletSpan))">
+                  @tupletSpan not allowed at all.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="Check_beamSpan" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:note">
+                <sch:assert test="not(exists(./@beamSpan))">
+                  @beamSpan not allowed at all.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+        </elementSpec>
+        
+        <classSpec ident="att.syltext" module="MEI.shared" type="atts" mode="delete"/>        
+        <classSpec ident="att.slurpresent" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.timestamp.performed" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.tupletpresent" module="MEI.shared" type="atts" mode="delete"/>
+<!--        <classSpec ident="att.beamed" module="MEI.shared" type="atts" mode="delete"/>--><!-- TODO ?bwb disllow on other than note? -->
+        <classSpec ident="att.lvpresent" module="MEI.cmn" type="atts" mode="delete"/>
+        
+        <classSpec ident="att.altsym" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.color" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.coloration" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.enclosingchars" module="MEI.shared" type="atts" mode="delete"/>
+<!--        <classSpec ident="att.relativesize" module="MEI.shared" type="atts" mode="delete"/>--><!-- TODO bwb ?disallow on other than note? -->
+        <classSpec ident="att.staffloc" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.visibility" module="MEI.shared" type="atts" mode="change">
+          <attList>
+            <!--<attDef ident="att.chord.vis" mode="delete"/>-->
+            <attDef ident="att.layer.vis" mode="delete"/>
+            <attDef ident="att.layerDef.vis" mode="delete"/>
+            <attDef ident="att.mRest.vis" mode="delete"/>
+            <attDef ident="att.mSpace.vis" mode="delete"/>
+            <!--<attDef ident="att.note.vis" mode="delete"/>-->
+            <attDef ident="att.staff.vis" mode="delete"/>
+            <!--<attDef ident="att.staffDef.vis" mode="delete"/>-->
+            <!--<attDef ident="att.staffGrp.vis" mode="delete"/>-->
+            <attDef ident="att.uneume.vis" mode="delete"/>
+          </attList>
+        </classSpec>
+        <!--<classSpec ident="att.chord.vis" type="atts" mode="delete"/>-->
+        <classSpec ident="att.layer.vis" type="atts" mode="delete"/>
+        <classSpec ident="att.layerDef.vis" type="atts" module="MEI.shared" mode="change">
+          <classes mode="change">
+            <memberOf key="att.labels.addl"/>
+            <memberOf key="att.beaming.vis" mode="delete"/>
+            <memberOf key="att.textstyle" mode="delete"/>
+            <memberOf key="att.visibility" mode="delete"/>
+          </classes>
+        </classSpec>
+        <classSpec ident="att.mRest.vis" type="atts" mode="delete"/>
+        <classSpec ident="att.mSpace.vis" type="atts" mode="delete"/>
+        <!--<classSpec ident="att.note.vis" type="atts" mode="delete"/>-->
+        <classSpec ident="att.staff.vis" type="atts" mode="delete"/>
+        <!--<classSpec ident="att.staffDef.vis" type="atts" mode="delete"/>-->
+        <!--<classSpec ident="att.staffGrp.vis" type="atts" mode="delete"/>-->
+        <classSpec ident="att.uneume.vis" type="atts" mode="delete"/>        
+        <classSpec ident="att.xy" module="MEI.shared" type="atts" mode="delete"/>
+        <!--<classSpec ident="att.pointing" module="MEI.shared" type="atts" mode="delete"/>-->
+        <classSpec ident="att.barplacement" module="MEI.shared" type="atts" mode="delete"/>
+        <!--<classSpec ident="att.measurement" module="MEI.shared" type="atts" mode="delete"/>-->
+        <!--<classSpec ident="att.width" module="MEI.shared" type="atts" mode="delete"/>-->
+        <classSpec ident="att.note.vis.cmn" module="MEI.cmn" type="atts" mode="delete"/>
+        <classSpec ident="att.articulation.performed" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.duration.performed" module="MEI.shared" type="atts" mode="delete"/>
+        <!--<classSpec ident="att.declaring" module="MEI.shared" type="atts" mode="delete"/>-->
+        <classSpec ident="att.layer.log" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.cleffing.vis" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.curvature" module="MEI.shared" type="atts" mode="change">
+          <attList>
+            <attDef ident="curvedir" usage="opt" mode="change">
+              <valList mode="change">
+                <valItem ident="mixed"></valItem>
+              </valList>
+            </attDef>
+          </attList>
+        </classSpec>
+        <classSpec ident="att.duration.default" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.octave.default" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.scoreDef.log.cmn" module="MEI.cmn" type="atts" mode="delete"/>
+        <classSpec ident="att.distances" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.lyricstyle" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.multinummeasures" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.onelinestaff" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.textstyle" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.scoreDef.vis.cmn" module="MEI.cmn" type="atts" mode="delete"/>
+        <classSpec ident="att.beaming.vis" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.beaming.log" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.pianopedals" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.rehearsal" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.slurrend" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.tierend" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.scoreDef.ges" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.mmtempo" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.instrumentident" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.scalable" module="MEI.shared" type="atts" mode="delete"/>
+        <classSpec ident="att.solfa" module="MEI.analysis" type="atts" mode="delete"/>
+        <classSpec ident="att.pitchclass" module="MEI.analysis" type="atts" mode="delete"/>
+        <classSpec ident="att.melodicfunction" module="MEI.analysis" type="atts" mode="delete"/>
+        <classSpec ident="att.intervallicdesc" module="MEI.analysis" type="atts" mode="delete"/>
+        <classSpec ident="att.intervalharmonic" module="MEI.analysis" type="atts" mode="delete"/>
+        <classSpec ident="att.harmonicfunction" module="MEI.analysis" type="atts" mode="delete"/>
+        
+        <classSpec ident="att.stemmed" module="MEI.shared" type="atts" mode="replace">
+          <desc>Attributes that describe the properties of stemmed features; that is, chords and
+            notes.</desc>
+          <classes>
+            <memberOf key="att.stemmed.cmn"/>
+          </classes>
+          <attList>
+            <attDef ident="stem.dir" usage="opt">
+              <desc>describes the direction of a stem.</desc>
+              <datatype>
+                <rng:ref name="data.STEMDIRECTION"/>
+              </datatype>
+            </attDef>
+            <!--<attDef ident="stem.len" usage="opt" mode="delete"/>            
+            <attDef ident="stem.pos" usage="opt" mode="delete"/>            
+            <attDef ident="stem.x" usage="opt" mode="delete"/>            
+            <attDef ident="stem.y" usage="opt" mode="delete"/>       -->     
+          </attList>
+        </classSpec>
+        
+        <classSpec ident="att.staffDef.vis" module="MEI.shared" type="atts" mode="replace">
+          <desc>Visual domain attributes for staffDef.</desc>
+          <classes>
+            <memberOf key="att.cleffing.vis"/>
+            <memberOf key="att.distances"/>
+            <memberOf key="att.keySigDefault.vis"/>
+            <memberOf key="att.labels.addl"/>
+            <memberOf key="att.lyricstyle"/>
+            <memberOf key="att.meterSigDefault.vis"/>
+            <memberOf key="att.multinummeasures"/>
+            <memberOf key="att.onelinestaff"/>
+            <memberOf key="att.scalable"/>
+            <memberOf key="att.textstyle"/>
+            <memberOf key="att.visibility"/>
+            <memberOf key="att.staffDef.vis.cmn"/>
+            <memberOf key="att.staffDef.vis.mensural"/>
+          </classes>
+          <attList>
+            <!--<attDef ident="grid.show" usage="opt" mode="delete"/>
+            -->
+            <attDef ident="layerscheme" usage="opt">
+              <desc>indicates the number of layers and their stem directions.</desc>
+              <datatype>
+                <rng:ref name="data.LAYERSCHEME"/>
+              </datatype>
+            </attDef>
+            <attDef ident="lines" usage="opt">
+              <desc>indicates the number of staff lines.</desc>
+              <datatype>
+                <rng:data type="positiveInteger"/>
+              </datatype>
+            </attDef>
+            <!--<attDef ident="lines.color" usage="opt" mode="delete"/>
+            
+            <attDef ident="lines.visible" usage="opt" mode="delete"/>
+            
+            <attDef ident="spacing" usage="opt" mode="delete"/>-->
+          </attList>
+        </classSpec>
+        
+        <classSpec ident="att.note.ges" module="MEI.shared" type="atts" mode="replace">
+          <desc>Gestural domain attributes.</desc>
+          <classes>
+            <memberOf key="att.accidental.performed"/>
+            <!--<memberOf key="att.articulation.performed"/>
+            <memberOf key="att.duration.performed"/>
+            <memberOf key="att.instrumentident"/>-->
+            <memberOf key="att.note.ges.cmn"/>
+            <!--<memberOf key="att.note.ges.mensural"/>
+            <memberOf key="att.note.ges.tablature"/>-->
+          </classes>
+        </classSpec>
+        
+        <classSpec ident="att.chord.ges" module="MEI.shared" type="atts" mode="replace">
+          <desc>Gestural domain attributes.</desc>
+          <classes>
+            <memberOf key="att.articulation.performed"/>
+            <!--<memberOf key="att.duration.performed"/>
+            <memberOf key="att.instrumentident"/>-->
+            <memberOf key="att.chord.ges.cmn"/>
+          </classes>
+        </classSpec>
+        
+        <classSpec ident="att.scoreDef.vis" module="MEI.shared" type="atts" mode="replace">
+          <desc>Visual domain attributes for scoreDef in the CMN repertoire.</desc>
+          <classes>
+            <memberOf key="att.barplacement"/>
+            <memberOf key="att.cleffing.vis"/>
+            <memberOf key="att.distances"/>
+            <memberOf key="att.keySigDefault.vis"/>
+            <memberOf key="att.lyricstyle"/>
+            <memberOf key="att.meterSigDefault.vis"/>
+            <memberOf key="att.multinummeasures"/>
+            <memberOf key="att.onelinestaff"/>
+            <memberOf key="att.textstyle"/>
+            <memberOf key="att.scoreDef.vis.cmn"/>
+            <memberOf key="att.scoreDef.vis.mensural"/>
+          </classes>
+          <attList>
+            <attDef ident="optimize" usage="opt">
+              <desc>indicates whether staves without notes, rests, etc. should be displayed. When the
+                value is 'true', empty staves are displayed.</desc>
+              <datatype>
+                <rng:ref name="data.BOOLEAN"/>
+              </datatype>
+            </attDef>
+          </attList>
+        </classSpec>
+        
+        <classSpec ident="att.common.anl" module="MEI.analysis" type="atts" mode="replace">
+          <desc>Common analytical attributes. When the meiLinkAlign module is used, the when attribute is
+            also a member of this attribute class.</desc>
+          <classes>
+            <memberOf key="att.alignment"/>
+          </classes>
+          <attList>
+            <!--<attDef ident="copyof" usage="opt" mode="delete"/>
+            -->
+            <attDef ident="corresp" usage="opt">
+              <desc>used to point to other elements that correspond to this one in a generic
+                fashion.</desc>
+              <datatype>
+                <rng:ref name="data.URIS"/>
+              </datatype>
+            </attDef>
+            <!--
+            <attDef ident="next" usage="opt" mode="delete"/>
+            
+            <attDef ident="prev" usage="opt" mode="delete"/>
+            -->
+            <attDef ident="sameas" usage="opt">
+              <desc>points to an element that is the same as the current element but is not a literal copy
+                of the current element.</desc>
+              <datatype>
+                <rng:ref name="data.URIS"/>
+              </datatype>
+            </attDef>
+            <!--<attDef ident="synch" usage="opt" mode="delete"/>-->
+            
+          </attList>
+        </classSpec>
+        
+        
+        <macroSpec ident="data.STAFFREL" module="MEI" type="dt" mode="replace">
+          <desc>Location of musical material relative to a staff.</desc>
+          <content>
+            <rng:choice>
+              <rng:value>above</rng:value>
+              <a:documentation>written above staff</a:documentation>
+              <rng:value>below</rng:value>
+              <a:documentation>written below staff</a:documentation>
+              <rng:value>within</rng:value>
+              <a:documentation>written on staff</a:documentation>
+              <rng:value>between</rng:value>
+              <a:documentation>written between two adjacent staves (only allowed when two staves are specified in @staff)</a:documentation>
+            </rng:choice>
+          </content>
+        </macroSpec>
+        
+        <elementSpec ident="app" module="MEI.critapp" mode="change">
+          <classes mode="change">
+            <memberOf key="att.declaring" mode="add"/>
+          </classes>
+        </elementSpec>
+        
+        <elementSpec ident="clip" module="MEI.performance" mode="change">
+          <classes mode="change">
+            <memberOf key="att.typed"/>
+          </classes>
+        </elementSpec>
+        
+        <elementSpec ident="ptr" module="MEI.ptrref" mode="change">
+          <classes mode="change">
+            <memberOf key="att.typed" mode="add"/>
+          </classes>
+        </elementSpec>
+        
+        <elementSpec ident="staffDef" module="MEI.shared" mode="replace">
+          <desc>(staff definition) – Container for staff meta-information.</desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="att.declaring"/>
+            <memberOf key="att.staffDef.log"/>
+            <memberOf key="att.staffDef.vis"/>
+            <memberOf key="att.staffDef.ges"/>
+            <memberOf key="att.staffDef.anl"/>
+            <memberOf key="model.staffDefLike"/>
+          </classes>
+          <content>
+            <rng:zeroOrMore>
+              <rng:ref name="model.labelLike"/>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
+              <rng:choice>
+                <rng:ref name="model.instrDefLike"/>
+                <rng:ref name="model.layerDefLike"/>
+                <rng:ref name="model.staffDefPart"/>
+              </rng:choice>
+            </rng:zeroOrMore>
+          </content>
+          <constraintSpec ident="Check_staffDefn" scheme="isoschematron">
+            <constraint>
+              <sch:rule context="mei:staffDef">
+                <sch:let name="thisstaff" value="@n"/>
+                <sch:assert test="@n">A staffDef must have an n attribute.</sch:assert>
+                <!--<sch:assert test="@lines or preceding::mei:staffDef[@n=$thisstaff and @lines]">The first
+                  occurrence of a staff must declare the number of staff lines.</sch:assert>-->
+                <sch:assert test="count(mei:clef) + count(mei:clefGrp) &lt; 2">Only one clef or clefGrp is
+                  permitted.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="Check_ancestor_staff" scheme="isoschematron">
+            <constraint>
+              <sch:rule context="mei:staffDef[ancestor::mei:staff]">
+                <sch:let name="thisstaff" value="@n"/>
+                <sch:assert test="ancestor::mei:staff/@n eq $thisstaff">If a staffDef appears in a staff,
+                  it must bear the same @n than this staff.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="checkStaffDef" scheme="isoschematron">
+            <constraint>
+              <sch:rule context="mei:staffDef">
+                <sch:assert test="ancestor::mei:scoreDef or ancestor::mei:measure">A staffDef may only appear inside a measure 
+                  or a scoreDef.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <constraintSpec ident="checkStaffDefLabels" scheme="isoschematron">
+            <constraint>
+              <sch:rule context="mei:scoreDef">
+                <sch:assert test="not(descendant::mei:label)" role="warning">Instead of label elements, label attributes should be used.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          <!--<constraintSpec ident="Check_clef_position_staffDef_nolines" scheme="isoschematron">
+            <constraint>
+              <sch:rule context="mei:staffDef[@clef.line and not(@lines)]">
+                <sch:let name="thisstaff" value="@n"/>
+                <sch:let name="stafflines" value="preceding::mei:staffDef[@n=$thisstaff and
+                  @lines][1]/@lines"/>
+                <sch:assert test="number(@clef.line) &lt;= number($stafflines)">The clef position must be
+                  less than or equal to the number of lines on the staff.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>-->
+        </elementSpec>      
+        
+        <elementSpec ident="score" module="MEI.cmn" mode="change">
+                    
+          <constraintSpec ident="Check_startIDs" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="@startid">
+                <sch:let name="ref" value="."/>
+                <sch:assert test="starts-with($ref,'#') and exists(ancestor::mei:score//mei:*[@xml:id = substring($ref,2)])">
+                  Every @startid must point to an element on the same page.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="Check_endIDs" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="@endid">
+                <sch:let name="ref" value="."/>
+                <sch:assert test="(starts-with($ref,'#') and exists(ancestor::mei:score//mei:*[@xml:id = substring($ref,2)])) or @label = 'checked'" role="warning">
+                  Please check if this controlevent really ends on a different page.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkFermatas" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:fermata" role="warning">
+                <sch:assert test="not(@label = 'checked')">There should be no fermata elements, but @fermata attributes instead.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkTuplets" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:tupletSpan" role="warning">
+                <sch:assert test="@label = 'checked'">Is this tupletSpan really necessary, or could it be 
+                  translated into regular tuplet elements instead?</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkBeams" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:beamSpan" role="warning">
+                <sch:assert test="@label = 'checked'">Is this beamSpan really necessary, or could it be 
+                  translated into regular beam elements instead?</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkArtics" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:artic" role="warning">
+                <sch:assert test="@label = 'checked'">Is this artic really necessary, or could it be 
+                  translated into attributes on its parent instead?</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkChordDurs" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:chord">
+                <sch:assert test="(parent::mei:bTrem/@dur and not(descendant::mei:note/@dur) and not(@dur)) or (parent::mei:fTrem/@dur and not(descendant::mei:note/@dur) and not(@dur)) or (exists(@dur) and not(descendant::mei:note/@dur)) or exists(.//@sameas)">@dur must only be specified on chords or their parent bTrem, not on the notes the chord contains.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkLb" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:lb">
+                <sch:assert test="not(@sameas)">mei:lb must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkPb" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:pb">
+                <sch:assert test="not(@sameas)">mei:pb must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkVerse" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:verse">
+                <sch:assert test="not(@sameas)">mei:verse must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkSyl" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:syl">
+                <sch:assert test="not(@sameas)">mei:syl must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkChoice" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:choice">
+                <sch:assert test="not(@sameas)">mei:choice must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkAbbr" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:abbr">
+                <sch:assert test="not(@sameas)">mei:abbr must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkExpan" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:expan">
+                <sch:assert test="not(@sameas)">mei:expan must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkOrig" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:orig">
+                <sch:assert test="not(@sameas)">mei:orig must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkReg" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:reg">
+                <sch:assert test="not(@sameas)">mei:reg must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkSic" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:sic">
+                <sch:assert test="not(@sameas)">mei:sic must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkCorr" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:corr">
+                <sch:assert test="not(@sameas)">mei:corr must not point to the core using @sameas.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <!-- Schematron rule for checking relations -->
+          <constraintSpec ident="checkSameas" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:*[@sameas and starts-with(@sameas,'../freidi-work.xml')]">
+                <sch:let name="idref" value="substring-after(@sameas,'#')"/>
+                <sch:let name="path" value="concat(substring-before(document-uri(/),'/musicSources/freidi-musicSource_'),'/freidi-work.xml')"/>
+                <sch:let name="core" value="doc($path)"/>
+                <sch:assert test="exists($core/id($idref))">Every @sameas must point to an element in freidi-work.xml</sch:assert>                         
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkCorresp" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:*[@corresp]">
+                <sch:let name="idref" value="substring-after(@corresp,'#')"/>
+                <sch:let name="corresp" value="@corresp"/>
+                <sch:let name="root" value="root()"/>
+                <sch:assert test="starts-with(@corresp,'#')">@corresp is only allowed to link within the same document</sch:assert>
+                <sch:assert test="exists($root/id($idref)) or local-name() = 'annot'">Every @corresp relation must point to an existing element in the same file.</sch:assert>                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <!-- Rules for ControlEvents -->
+          
+          <constraintSpec ident="checkSlurs" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:slur">
+                <sch:assert test="(ancestor::mei:mei[@xml:id = 'freidi-work'] and (every $att in @* satisfies local-name($att) = ('id','startid','endid','staff','n'))) or 
+                  (ancestor::mei:orig and (every $att in @* satisfies local-name($att) = ('id','curvedir','staff','tstamp','tstamp2'))) or
+                  (ancestor::mei:reg and (every $att in @* satisfies local-name($att) = ('id','sameas','staff','startid','endid'))) or
+                  (not(ancestor::mei:choice) and (every $att in @* satisfies local-name($att) = ('id','sameas','startid','endid','staff','curvedir')))">
+                  Slurs have complex rules, depending on where they reside.</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <!--<constraintSpec ident="checkHairpins" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:hairpin">
+                <sch:let name="staff" value="@staff"/>
+                <sch:let name="staves" value="tokenize($staff,' ')"/>
+                
+                <sch:assert test="ancestor::mei:choice or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','staff','layer','form','place','sameas')) 
+                  and @form and @tstamp and @tstamp2 and @staff and @place)">
+                  inambiguous hairpins must specify @tstamp, @tstamp2, @staff, @form, @xml:id?, @sameas?, @layer? (only).</sch:assert>
+                <sch:assert test="not(ancestor::mei:orig) or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','staff','layer','form','place')) 
+                  and @tstamp and @tstamp2 and @staff and @form and @place)">
+                  hairpins found in the source must specify @tstamp, @tstamp2, @staff, @form, @place, @xml:id?, @layer? (only).</sch:assert>
+                <sch:assert test="not(ancestor::mei:reg) or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','sameas','staff','form','layer','sameas'))
+                  and @tstamp and @tstamp2 and @staff and @form)">
+                  normalized slurs must specify @tstamp, @tstamp2, @staff, @form, @xml:id?, @layer?, @sameas? (only).</sch:assert>
+                <sch:assert test="count($staves) = 1 or (
+                  count($staves) = 2
+                  and
+                  replace(string(number($staves[1]) - number($staves[2])),'-','') = '1'
+                  and
+                  @place = 'between'
+                  and
+                  parent::mei:orig
+                  )">A hairpin must either be assigned to only one staff or to two adjacent staves, which also requires 
+                  a @place='between' and may only appear in the mei:orig describing the actual source.</sch:assert>
+                <!-\- For the FreiDi project, we assume that all staves are coded in order (instead of relying on the order 
+                of staffDef elements, which is the official rule.-\->                
+              </sch:rule>
+            </constraint>
+          </constraintSpec>-->
+          
+          <!--<constraintSpec ident="checkDynams" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:dynam">
+                <sch:let name="staff" value="@staff"/>
+                <sch:let name="staves" value="tokenize($staff,' ')"/>
+                
+                <sch:assert test="ancestor::mei:choice or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','staff','layer','place','sameas','label')) 
+                  and @tstamp and @staff and @place)">
+                  inambiguous dynams must specify @tstamp, @tstamp2?, @staff, @place, @xml:id?, @sameas?, @layer? (only).</sch:assert>
+                <sch:assert test="not(ancestor::mei:orig) or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','staff','layer','place','label')) 
+                  and @tstamp and @staff and @place)">
+                  dynams found in the source must specify @tstamp, @tstamp2?, @staff, @place, @xml:id?, @layer? (only).</sch:assert>
+                <sch:assert test="not(ancestor::mei:reg) or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','sameas','staff','layer','sameas','label'))
+                  and @tstamp and @staff)">
+                  normalized dynams must specify @tstamp, @tstamp2?, @staff, @xml:id?, @layer?, @sameas?(only).</sch:assert>
+                
+                <sch:assert test="count($staves) = 1 or (
+                  count($staves) = 2
+                  and
+                  replace(string(number($staves[1]) - number($staves[2])),'-','') = '1'
+                  and
+                  @place = 'between'
+                  and
+                  parent::mei:orig
+                  )">A dynam must either be assigned to only one staff or to two adjacent staves, which also requires 
+                  a @place='between' and may only appear in the mei:orig describing the actual source.</sch:assert>
+                <!-\- For the FreiDi project, we assume that all staves are coded in order (instead of relying on the order 
+                of staffDef elements, which is the official rule.-\->
+                
+                <sch:assert test="not(parent::mei:reg) or ((not(matches(.//text(),'[^sfpzrm]+')) and not(descendant::mei:rend)) or @label = 'checked')" role="warning">Please make sure
+                  that only normalized dynamic values are specified in the reg element.</sch:assert>
+                <sch:assert test="not(@tstamp2) or contains(.//text(),'cres') or @label = 'checked'" role="warning">Is it correct that this
+                  dynam really needs a @tstamp2? It seems to be no 'crescendo'…</sch:assert>
+                <sch:assert test="not(@label) or @label = 'checked'">The @label attribute may only be used to indicate the correctness of the encoding 
+                  and suppress further messages from Schematron. The only allowed value is 'checked'</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>-->
+          
+          <!--<constraintSpec ident="checkDirs" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:dir">
+                <sch:let name="staff" value="@staff"/>
+                <sch:let name="staves" value="tokenize($staff,' ')"/>
+                
+                <sch:assert test="ancestor::mei:choice or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','staff','layer','place','sameas','label')) 
+                  and @tstamp and @staff and @place)">
+                  inambiguous dirs must specify @tstamp, @tstamp2?, @staff, @place, @xml:id?, @sameas?, @layer? (only).</sch:assert>
+                <sch:assert test="not(ancestor::mei:orig) or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','staff','layer','place','label')) 
+                  and @tstamp and @staff and @place)">
+                  dirs found in the source must specify @tstamp, @tstamp2?, @staff, @place, @xml:id?, @layer? (only).</sch:assert>
+                <sch:assert test="not(ancestor::mei:reg) or ((every $att in @* satisfies local-name($att) = ('id','tstamp','tstamp2','sameas','staff','layer','sameas','label'))
+                  and @tstamp and @staff)">
+                  normalized dirs must specify @tstamp, @tstamp2?, @staff, @xml:id?, @layer?, @sameas? (only).</sch:assert>
+                
+                <sch:assert test="count($staves) = 1 or (
+                  count($staves) = 2
+                  and
+                  replace(string(number($staves[1]) - number($staves[2])),'-','') = '1'
+                  and
+                  @place = 'between'
+                  and
+                  parent::mei:orig
+                  )">A dir must either be assigned to only one staff or to two adjacent staves, which also requires 
+                  a @place='between' and may only appear in the mei:orig describing the actual source.</sch:assert>
+                <!-\- For the FreiDi project, we assume that all staves are coded in order (instead of relying on the order 
+                of staffDef elements, which is the official rule.-\->
+                <sch:assert test="not(@tstamp2) or @label = 'checked'" role="warning">Is it correct that this
+                  dir really needs a @tstamp2? Normally it is sufficient to specify where it starts.</sch:assert>
+                <sch:assert test="not(@label) or @label = 'checked'">The @label attribute may only be used to indicate the correctness of the encoding 
+                  and suppress further messages from Schematron. The only allowed value is 'checked'</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>-->
+          
+          <constraintSpec ident="checkChoices" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:choice">
+                <!--<sch:assert test="count((mei:orig | mei:abbr | mei:sic)) = 1">
+                  Every choice must contain exactly one mei:orig or one mei:abbr.
+                </sch:assert>-->
+                <sch:assert test="(count(mei:reg) ge 1 and not(exists(mei:expan))) or (count(mei:expan) ge 1 and not(exists(mei:reg))) or (*:sic and *:corr)">
+                  Every choice must contain either one or more mei:reg and no mei:expan or vice versa.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+          <constraintSpec ident="checkRegs" scheme="isoschematron" mode="add">
+            <constraint>
+              <sch:rule context="mei:reg">
+                <sch:assert test="not(@cert) or @cert = 'high'">
+                  The only allowed value for @cert on mei:reg is 'high'. Everything else is by default 'medium'. 
+                </sch:assert>
+                <sch:assert test="parent::mei:choice/mei:reg[not(@cert)]">
+                  At least one interpretation needs to be of lower certainty – if all are equally certain, just drop @cert completely.
+                </sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+        </elementSpec>
+        <!-- cpMark.odd -->
+        
+        <classSpec ident="att.cpMark.anl" module="MEI.edittrans" type="atts" mode="add">
+          <desc>Analytical domain attributes.</desc>
+          <classes>
+            <memberOf key="att.common.anl"/>
+          </classes>
+        </classSpec>
+        <classSpec ident="att.cpMark.ges" module="MEI.edittrans" type="atts" mode="add">
+          <desc>Gestural domain attributes.</desc>
+          <classes>
+            <memberOf key="att.duration.performed"/>
+          </classes>
+        </classSpec>
+        <classSpec ident="att.cpMark.log" module="MEI.edittrans" type="atts" mode="add">
+          <desc>Logical domain attributes.</desc>
+          <classes>
+            <memberOf key="att.controlevent"/>
+            <memberOf key="att.startendid"/>
+            <memberOf key="att.timestamp2.musical"/>
+            <memberOf key="att.ref.offset"/>
+            <memberOf key="att.ref.staffident"/>
+            <memberOf key="att.ref.layerident"/>
+            <memberOf key="att.ref.startendid"/>
+            <memberOf key="att.octavedisplacement"/>
+          </classes>
+        </classSpec>
+        <classSpec ident="att.cpMark.vis" module="MEI.edittrans" type="atts" mode="add">
+          <desc>Visual domain attributes.</desc>
+          <classes>
+            <memberOf key="att.placement"/>
+            <!--<memberOf key="att.visualoffset"/>
+                        <memberOf key="att.visualoffset2.ho"/>
+                        <memberOf key="att.visualoffset2.to"/>
+                        <memberOf key="att.xy"/>-->
+          </classes>
+        </classSpec>
+        
+        <classSpec ident="att.ref.offset" module="MEI.shared" type="atts" mode="add">
+          <desc>Attributes that identify a distant musical range in terms of musical
+            time.</desc>
+          <attList>
+            <attDef ident="ref.offset" usage="opt">
+              <desc>encodes the starting point of a musical range in terms of musical time, i.e., a (potentially negative) count of
+                measures plus a beat location.</desc>
+              <datatype>
+                <rng:ref name="data.MEASUREBEATNEG"/>
+              </datatype>
+            </attDef>
+            <attDef ident="ref.offset2" usage="rwa">
+              <desc>encodes the ending point of a musical range in terms of musical time, i.e., a count of
+                measures plus a beat location. The values are relative to the measure identified by @ref.offset
+                on the same element.</desc>
+              <datatype>
+                <rng:ref name="data.MEASUREBEAT"/>
+              </datatype>
+              <constraintSpec ident="ref.offset2_requires_ref.offset" scheme="isoschematron">
+                <constraint>
+                  <sch:rule context="mei:*[@ref.offset2]">
+                    <sch:assert test="@ref.offset">Must have an attribute ref.offset when ref.offset2 is used.</sch:assert>
+                  </sch:rule>
+                </constraint>
+              </constraintSpec>
+            </attDef>
+          </attList>
+        </classSpec>
+        <classSpec ident="att.ref.staffident" module="MEI.shared" type="atts" mode="add">
+          <desc>Attributes for identifying the staff associated with a distant feature.</desc>
+          <attList>
+            <attDef ident="ref.staff" usage="mwa">
+              <desc>signifies the staff on which a distant, referenced notation occurs. Default to the same value 
+                as the local staff. Mandatory when applicable.</desc>
+              <datatype>
+                <rng:list>
+                  <rng:oneOrMore>
+                    <rng:data type="positiveInteger"/>
+                  </rng:oneOrMore>
+                </rng:list>
+              </datatype>
+            </attDef>
+          </attList>
+        </classSpec>
+        <classSpec ident="att.ref.layerident" module="MEI.shared" type="atts" mode="add">
+          <desc>Attributes that identify the layer to which a distant feature applies.</desc>
+          <attList>
+            <attDef ident="ref.layer" usage="opt">
+              <desc>identifies the layer to which a distant, referenced feature applies.</desc>
+              <datatype>
+                <rng:list>
+                  <rng:oneOrMore>
+                    <rng:data type="positiveInteger"/>
+                  </rng:oneOrMore>
+                </rng:list>
+              </datatype>
+            </attDef>
+          </attList>
+        </classSpec>
+        <classSpec ident="att.ref.startendid" module="MEI.shared" type="atts" mode="add">
+          <desc>Attributes recording the identifiers of the first and last elements of a sequence of
+            distant elements which are referenced by the current element.</desc>
+          <attList>
+            <attDef ident="ref.startid" usage="opt">
+              <desc>indicates the first element in a distant sequence of events which is referenced by the current element.</desc>
+              <datatype>
+                <rng:ref name="data.URI"/>
+              </datatype>
+            </attDef>
+            <attDef ident="ref.endid" usage="opt">
+              <desc>indicates the final element in a distant sequence of events which is referenced by the current element.</desc>
+              <datatype>
+                <rng:ref name="data.URI"/>
+              </datatype>
+            </attDef>
+          </attList>
+        </classSpec>
+        
+        <macroSpec ident="data.MEASUREBEATNEG" module="MEI" type="dt" mode="add">
+          <desc>A count of measures plus a beat location, i.e., -?[0-9]+m\+[0-9]+(\.?[0-9]*)?. The
+            measure count is the number of barlines crossed by the event, while the beat location is a
+            timestamp in the measure where the event ends. For example, dur="1m+3" indicates that the
+            event ends in the next measure on beat 3. The measure number must be in the range of preceding 
+            measures to
+            the number of remaining measures and the beat number must be in the range from 0 to the
+            numerator of the time signature plus 1. For example, for an event starting in the first
+            measure of a piece containing 6 measures in 6/8, the measure number must be between 0 to 5
+            and the beat number must be within the range from 0 to 7, e.g., "4m+3". </desc>
+          <content>
+            <rng:data type="token">
+              <rng:param name="pattern">-?[0-9]+m\+[0-9]+(\.[0-9]*)?</rng:param>
+            </rng:data>
+          </content>
+        </macroSpec>
+        
+        <macroSpec ident="data.TEXTRENDITION" mode="change" module="MEI" predeclare="false" status="stable" type="dt">
+          <desc>Text rendition values.</desc>
+          <content autoPrefix="true">
+            <rng:list>
+              <rng:oneOrMore>
+                <rng:choice>
+                  
+                  <rng:value>xx-small</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>x-small</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>small</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>medium</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>large</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>x-large</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>xx-large</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>smaller</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  <rng:value>larger</rng:value>
+                  <a:documentation>relative font size</a:documentation>
+                  
+                  <rng:value>italic</rng:value>
+                  <a:documentation>italicized (slanted to right)</a:documentation>
+                  <rng:value>oblique</rng:value>
+                  <a:documentation>oblique (slanted to left)</a:documentation>
+                  
+                  <rng:value>smcaps</rng:value>
+                  <a:documentation>small capitals</a:documentation>
+                  
+                  <rng:value>bold</rng:value>
+                  <a:documentation>relative font weight</a:documentation>
+                  <rng:value>bolder</rng:value>
+                  <a:documentation>relative font weight</a:documentation>
+                  <rng:value>lighter</rng:value>
+                  <a:documentation>relative font weight</a:documentation>
+                  
+                  <rng:value>box</rng:value>
+                  <a:documentation>enclosed in box</a:documentation>
+                  <rng:value>circle</rng:value>
+                  <a:documentation>enclosed in ellipse/circle</a:documentation>
+                  <rng:value>dbox</rng:value>
+                  <a:documentation>enclosed in diamond</a:documentation>
+                  <rng:value>tbox</rng:value>
+                  <a:documentation>enclosed in triangle</a:documentation>
+                  
+                  <rng:value>bslash</rng:value>
+                  <a:documentation>struck through by '\' (back slash)</a:documentation>
+                  <rng:value>fslash</rng:value>
+                  <a:documentation>struck through by '/' (forward slash)</a:documentation>
+                  <rng:value>line-through</rng:value>
+                  <a:documentation>struck through by '-'; may be qualified to indicate multiple lines,
+                    e.g. line-through(2)</a:documentation>
+                  <rng:value>none</rng:value>
+                  <a:documentation>not rendered, invisible</a:documentation>
+                  
+                  
+                  
+                  
+                  <rng:value>overline</rng:value>
+                  <a:documentation>line above the text; may be qualified to indicate multiple lines,
+                    e.g. overline(3)</a:documentation>
+                  <rng:value>strike</rng:value>
+                  <a:documentation>struck through by '-'; equivalent to line-through; may be qualified
+                    to indicate multiple lines, e.g. strike(3)</a:documentation>
+                  <rng:value>sub</rng:value>
+                  <a:documentation>subscript</a:documentation>
+                  <rng:value>sup</rng:value>
+                  <a:documentation>superscript</a:documentation>
+                  <rng:value>underline</rng:value>
+                  <a:documentation>underlined; may be qualified to indicate multiple lines, e.g.
+                    underline(2)</a:documentation>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  <rng:value>ltr</rng:value>
+                  <a:documentation>left-to-right (BIDI embed)</a:documentation>
+                  <rng:value>rtl</rng:value>
+                  <a:documentation>right-to-left (BIDI embed)</a:documentation>
+                  <rng:value>lro</rng:value>
+                  <a:documentation>eft-to-right (BIDI override)</a:documentation>
+                  <rng:value>rlo</rng:value>
+                  <a:documentation>right-to-left (BIDI override)</a:documentation>
+                  
+                  
+                  <!-- FreiDi additionals -->
+                  
+                  <rng:value>small-caps</rng:value>
+                  <a:documentation>small capitals</a:documentation>
+                  <rng:value>superscript</rng:value>
+                  <a:documentation>superscript</a:documentation>
+                  <rng:value>latintype</rng:value>
+                  <a:documentation>latintype</a:documentation>
+                  
+                  <!-- / FreiDi additionals -->
+                  
+                  <rng:data type="string">
+                    <rng:param name="pattern">(underline|overline|line-through|strike|letter-spacing|line-height)\(\d+\)</rng:param>
+                  </rng:data>
+                  <rng:data type="string">
+                    <rng:param name="pattern">(letter-spacing|line-height)\((\+|-)?\d+(\.\d+)?\)</rng:param>
+                  </rng:data>
+                  
+                  
+                  
+                </rng:choice>
+              </rng:oneOrMore>
+            </rng:list>
+          </content>
+        </macroSpec>
+        
+        <elementSpec ident="cpMark" module="MEI.edittrans" mode="add">
+          
+          <desc>A cpMark (cp stands for both copy and colla parte) is a (verbal or graphical) symbol in the score 
+            that indicates to fill omitted areas with musical material written elsewhere. Typical examples are a
+            "col Basso" directive, or plain numbers in empty measures that refer to numbers in filled measures. 
+            Whereas the rpt-Elements (beatRpt, halfmRpt, mRpt, mRpt2, multiRpt) have a strictly defined scope, 
+            cpMark is more free in its scope. Since such indications normally relate to omitted text in the transcibed
+            source, it is recommended to capture their positions with the attributes @tstamp and @staff. The 
+            "duration" of the omitted part is then encoded by using the @tstamp2 attribute. Ideally, this
+            part should be filled with space element(s) of the corresponding duration. The referred section can be 
+            identified by the attributes @ref.offset, @ref.offset2 and @ref.staff. @ref.offset2 is not required, and should only
+            be provided when it is absolutely clear which range should be copied. If no @ref.offset2 is provided, a similar duration
+            to the local omission (as encoded in the combination of @tstamp and @tstamp2) is to be assumed.
+            
+            If just the offset(s) or the staff is given, 
+            it is assumed that the other takes the same value as the local assignment of the cpMark, e.g. when only the @ref.staff
+            attribute is provided, it is assumed that the referenced part comes from the same measure. If a different measure 
+            is provided by @ref.offset, but no @ref.staff is given, then it is assumed that the material is to be taken from
+            the same staff. 
+            Verbal instructions are encoded as text content of the cpMark, graphical instructions may use the @altsym or @facs attributes.
+          </desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="att.facsimile"/>
+            <memberOf key="att.cpMark.log"/>
+            <memberOf key="att.cpMark.vis"/>
+            <memberOf key="att.cpMark.ges"/>
+            <memberOf key="att.cpMark.anl"/>
+            <memberOf key="att.typed"/>
+            <memberOf key="model.controleventLike.cmn"/>
+          </classes>
+          <content>
+            <rng:zeroOrMore>
+              <rng:choice>
+                <rng:text/>
+                <rng:ref name="model.textphraseLike.limited"/>
+                <rng:ref name="model.editLike"/>
+                <rng:ref name="model.transcriptionLike"/>
+              </rng:choice>
+            </rng:zeroOrMore>
+          </content>
+          <constraintSpec ident="cpMark_start-_and_end-type_attributes_required" scheme="isoschematron">
+            <constraint>
+              <sch:rule context="mei:cpMark">
+                <sch:assert test="@startid or @tstamp or @tstamp.ges or @tstamp.real"> Must have one of
+                  the attributes: startid, tstamp, tstamp.ges or tstamp.real</sch:assert>
+                <sch:assert test="@dur or @dur.ges or @endid or @tstamp2">Must have one of the
+                  attributes: dur, dur.ges, endid, or tstamp2</sch:assert>
+              </sch:rule>
+            </constraint>
+          </constraintSpec>
+          
+        </elementSpec>
+        
+        <elementSpec ident="pb" module="MEI.shared" mode="change">
+          <desc>(page break) – An empty formatting element that forces text to begin on a new
+            page.</desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="att.facsimile"/>
+            <memberOf key="att.pointing"/>
+            <memberOf key="att.source"/>
+            <memberOf key="att.pb.anl"/>
+            <memberOf key="att.pb.ges"/>
+            <memberOf key="att.pb.log"/>
+            <memberOf key="att.pb.vis"/>
+            <memberOf key="model.pbLike"/>
+          </classes>
+          <content>
+            <rng:ref name="macro.metaLike.page"/>
+            <!-- annots are needed for providedScoreDefs -->
+            <rng:optional>
+              <rng:ref name="model.annotLike"/>
+            </rng:optional>
+          </content>
+          <remarks>
+            <p>The <att>n</att> attribute should be used to record the page number displayed in the
+              source. It need not be an integer, e.g., 'iv', or 'p17-3'. The logical page number can be
+              calculated by counting previous <gi scheme="MEI">pb</gi> ancestor elements. When used in a
+              score context, a page break implies an accompanying system break.</p>
+          </remarks>
+          <remarks>
+            <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
+              standard.</p>
+          </remarks>
+        </elementSpec>
+        
+        <elementSpec ident="sb" module="MEI.shared" mode="change">
+          <desc>(system break) – An empty formatting element that forces musical notation to begin on a
+            new line.</desc>
+          <classes>
+            <memberOf key="att.common"/>
+            <memberOf key="att.facsimile"/>
+            <memberOf key="att.source"/>
+            <memberOf key="att.sb.log"/>
+            <memberOf key="att.sb.vis"/>
+            <memberOf key="att.sb.ges"/>
+            <memberOf key="att.sb.anl"/>
+            <memberOf key="model.milestoneLike.music"/>
+          </classes>
+          <content>
+            <rng:optional>
+              <rng:ref name="custos"/>
+            </rng:optional>
+            <rng:optional>
+              <rng:ref name="model.annotLike"/>
+            </rng:optional>
+          </content>
+          <remarks>
+            <p>Do not confuse this element with the <gi scheme="MEI">lb</gi> element, which performs a
+              similar function in prose.</p>
+          </remarks>
+        </elementSpec>
+        
+      </schemaSpec>
+    </body>
+  </text>
+</TEI>
