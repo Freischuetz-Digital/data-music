@@ -86,7 +86,7 @@
                 freidi-work.xml, version <xsl:value-of select="$core//mei:identifier[@type = 'FreiDi.internal.version']/@n"/> 
                 (<xsl:value-of select="$core//mei:identifier[@type = 'FreiDi.internal.version']/parent::mei:edition/mei:date/@isodate"/>).
             </xsl:comment>
-            <xsl:apply-templates select="node()" mode="#current"/>
+            <xsl:apply-templates select="mei:*" mode="#current"/>
         </xsl:copy>
     </xsl:template>
     
@@ -101,7 +101,7 @@
                 This file is also based on freidi-work.xml, version <xsl:value-of select="$core//mei:identifier[@type = 'FreiDi.internal.version']/@n"/> 
                 (<xsl:value-of select="$core//mei:identifier[@type = 'FreiDi.internal.version']/parent::mei:edition/mei:date/@isodate"/>).
             </xsl:comment>
-            <xsl:apply-templates select="node()" mode="#current"/>
+            <xsl:apply-templates select="mei:*" mode="#current"/>
         </xsl:copy>
     </xsl:template>
     
@@ -116,7 +116,7 @@
                 This file is also based on freidi-work.xml, version <xsl:value-of select="$core//mei:identifier[@type = 'FreiDi.internal.version']/@n"/> 
                 (<xsl:value-of select="$core//mei:identifier[@type = 'FreiDi.internal.version']/parent::mei:edition/mei:date/@isodate"/>).
             </xsl:comment>
-            <xsl:apply-templates select="node()" mode="#current"/>
+            <xsl:apply-templates select="mei:*" mode="#current"/>
         </xsl:copy>
     </xsl:template>
     
@@ -146,10 +146,10 @@
             <xsl:apply-templates select="@* except @sameas" mode="#current"/>
             <xsl:choose>
                 <xsl:when test="parent::mei:chord">
-                    <xsl:apply-templates select="$core.elem/(@* except (@xml:id,@dur))" mode="#current"/>
+                    <xsl:apply-templates select="$core.elem/(@* except (@xml:id,@dur,@startid,@endid))" mode="#current"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:apply-templates select="$core.elem/(@* except @xml:id)" mode="#current"/>
+                    <xsl:apply-templates select="$core.elem/(@* except (@xml:id, @startid,@endid))" mode="#current"/>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:apply-templates select="node()" mode="#current"/>
