@@ -178,6 +178,100 @@
         </xsl:copy>
     </xsl:template>
     
+    <!-- remove duplicated accidentals -->
+    <xsl:template match="mei:note[@accid and ancestor-or-self::*/@corresp]" mode="get.abbr get.expan get.raw">
+        <xsl:variable name="this.accid" select="@accid" as="xs:string"/>
+        <xsl:variable name="this.pname" select="@pname" as="xs:string"/>
+        <xsl:variable name="this.dur.elem" select="ancestor-or-self::mei:*[@dur][1]" as="node()"/>
+        <xsl:choose>
+            <xsl:when test="not($this.dur.elem/preceding-sibling::mei:*)">
+                <xsl:next-match/>
+                <!-- todo: maybe check if the accidental is just a cautionary accidental and remove it in that case -->
+                <!--<xsl:variable name="staff.n" select="ancestor::mei:staff/@n" as="xs:string"/>
+                <xsl:variable name="current.scoreDef" select="preceding::mei:scoreDef[@key.sig][1]" as="node()"/>
+                <xsl:variable name="current.key.sig" select="if($current.scoreDef//mei:staffDef[@n = $staff.n and @key.sig]) then($current.scoreDef//mei:staffDef[@n = $staff.n]/string(@key.sig)) else($current.scoreDef/string(@key.sig))" as="xs:string"/>
+                <xsl:variable name="circle.steps" select="number(substring($current.key.sig,1,1)) cast as xs:integer" as="xs:integer"/>
+                <xsl:variable name="affected.pitches" as="xs:string*">
+                    <xsl:choose>
+                        <xsl:when test="$circle.steps = 0"/>
+                        <xsl:when test="ends-with($current.key.sig,'s')">
+                            <xsl:sequence select="('f','c','g','d','a','e','b')[position() le $circle.steps]"/>
+                        </xsl:when>
+                        <xsl:when test="ends-with($current.key.sig,'f')">
+                            <xsl:sequence select="('b','e','a','d','g','c','f')[position() le $circle.steps]"/>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:variable>
+                
+                <xsl:message select="'   ' || upper-case($this.pname) || $this.accid || ' is affected by ' || $current.key.sig || ' (circle.steps:' || $circle.steps || ', affected.pitches:' || string-join($affected.pitches,'/') || ')'"/>
+                
+                <xsl:choose>
+                    <xsl:when test="$circle.steps = 0 and $this.accid = 'n'">
+                        <xsl:copy>
+                            <xsl:apply-templates select="@* except @accid" mode="#current"/>
+                            <xsl:attribute name="accid.ges" select="@accid"/>
+                            <xsl:apply-templates select="node()" mode="#current"/>
+                        </xsl:copy>
+                    </xsl:when>
+                    <xsl:when test="$this.pname = $affected.pitches and ends-with($current.key.sig,$this.accid)">
+                        <xsl:copy>
+                            <xsl:apply-templates select="@* except @accid" mode="#current"/>
+                            <xsl:attribute name="accid.ges" select="@accid"/>
+                            <xsl:apply-templates select="node()" mode="#current"/>
+                        </xsl:copy>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:next-match/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            -->
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="local-name($this.dur.elem) = 'chord'">
+                        <xsl:choose>
+                            <xsl:when test="$this.dur.elem/preceding-sibling::mei:chord/mei:note[@accid = $this.accid and @pname = $this.pname]">
+                                <xsl:copy>
+                                    <xsl:apply-templates select="@* except @accid" mode="#current"/>
+                                    <xsl:attribute name="accid.ges" select="@accid"/>
+                                    <xsl:apply-templates select="node()" mode="#current"/>
+                                </xsl:copy>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:next-match/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:when test="local-name($this.dur.elem) = 'note'">
+                        <xsl:choose>
+                            <xsl:when test="$this.dur.elem/preceding-sibling::mei:note[@accid = $this.accid and @pname = $this.pname]">
+                                <xsl:copy>
+                                    <xsl:apply-templates select="@* except @accid" mode="#current"/>
+                                    <xsl:attribute name="accid.ges" select="@accid"/>
+                                    <xsl:apply-templates select="node()" mode="#current"/>
+                                </xsl:copy>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:next-match/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:otherwise>
+            <!--<xsl:when test="$this.dur.elem/preceding-sibling::mei:*/descendant-or-self::mei:note[@accid = $this.accid and @pname = $this.pname]">
+                <xsl:copy>
+                    <xsl:apply-templates select="@* except @accid" mode="#current"/>
+                    <xsl:attribute name="accid.ges" select="@accid"/>
+                    <xsl:apply-templates select="node()" mode="#current"/>
+                </xsl:copy>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:next-match/>
+            </xsl:otherwise>-->
+        </xsl:choose>
+        
+    </xsl:template>
+    
     <xsl:template match="mei:choice" mode="get.abbr">
         <xsl:choose>
             <xsl:when test="child::mei:corr">
