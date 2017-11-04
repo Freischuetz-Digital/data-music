@@ -31,6 +31,11 @@
             </titleStmt>
             <editionStmt>
               <edition>
+                <identifier type="FreiDi.internal.version" n="1.1.0"/>
+                <ptr target="https://github.com/Freischuetz-Digital/data-music"/>
+                <date isodate="2017-11-04"/>
+              </edition>
+              <edition>
                 <identifier type="FreiDi.internal.version" n="1.0.0"/>
                 <ptr target="https://github.com/Freischuetz-Digital/data-music"/>
                 <date isodate="2016-05-13"/>

@@ -36,7 +36,7 @@
                 <xsl:comment>Concordance automatically generated on <xsl:value-of select="string(current-dateTime())"/>.
                 Sources considered:
                 <xsl:for-each select="$sources">
-                    <xsl:value-of select="@xml:id"/>: version <xsl:value-of select=".//mei:identifier[@type = 'FreiDi.internal.version']/@n"/> (<xsl:value-of select=".//mei:identifier[@type = 'FreiDi.internal.version']/parent::mei:edition/mei:date/@isodate"/>)<xsl:if test="position() lt count($sources)">,
+                    <xsl:value-of select="@xml:id"/>: version <xsl:value-of select="(.//mei:identifier[@type = 'FreiDi.internal.version'])[1]/@n"/> (<xsl:value-of select="(.//mei:identifier[@type = 'FreiDi.internal.version'])[1]/parent::mei:edition/mei:date/@isodate"/>)<xsl:if test="position() lt count($sources)">,
                     </xsl:if>
                     
                 </xsl:for-each>
